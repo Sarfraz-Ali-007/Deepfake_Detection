@@ -2,29 +2,38 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+from huggingface_hub import hf_hub_download
 
 # ---------------- CONFIG ----------------
-MODEL_PATH = "fake_face_detector.h5"
 IMG_SIZE = 128
 
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model(MODEL_PATH)
+
+    model_path = hf_hub_download(
+        repo_id="freemldl/Deepfake_Detection",  
+        filename="fake_face_detector.h5"
+    )
+
+    return tf.keras.models.load_model(model_path)
 
 model = load_model()
 
-# ---------------- PAGE ----------------
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Deepfake Face Detector",
     page_icon="🧠",
     layout="centered"
 )
 
+# ---------------- UI ----------------
 st.title("🧠 Deepfake Face Detector")
-st.write("Upload a face image and the model will predict whether it is REAL or FAKE.")
 
-# ---------------- UPLOAD ----------------
+st.write(
+    "Upload a face image and the model will predict whether it is REAL or FAKE."
+)
+
 uploaded_file = st.file_uploader(
     "Choose an image",
     type=["jpg", "jpeg", "png"]
@@ -42,7 +51,7 @@ if uploaded_file is not None:
 
     if st.button("Detect"):
 
-        # Preprocess
+        # Preprocess image
         img = image.resize((IMG_SIZE, IMG_SIZE))
 
         img_array = np.array(img)
@@ -53,12 +62,13 @@ if uploaded_file is not None:
 
         img_array = np.expand_dims(img_array, axis=0)
 
-        # Prediction
+        # Predict
         pred = float(model.predict(img_array, verbose=0)[0][0])
 
         st.divider()
 
         if pred > 0.5:
+
             confidence = pred * 100
 
             st.error(
@@ -68,6 +78,7 @@ if uploaded_file is not None:
             st.progress(min(int(confidence), 100))
 
         else:
+
             confidence = (1 - pred) * 100
 
             st.success(
