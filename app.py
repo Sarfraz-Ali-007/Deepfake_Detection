@@ -2,18 +2,30 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-from huggingface_hub import hf_hub_download
+from huggingface_hub import hf_hub_download, list_repo_files
 
 # ---------------- CONFIG ----------------
 IMG_SIZE = 128
+REPO_ID = "freemldl/Deepfake_Detection"
 
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
 
+    files = list_repo_files(REPO_ID)
+
+    h5_files = [f for f in files if f.endswith(".h5")]
+
+    if not h5_files:
+        raise Exception(
+            f"No .h5 file found in Hugging Face repo.\nFiles found: {files}"
+        )
+
+    model_file = h5_files[0]
+
     model_path = hf_hub_download(
-        repo_id="freemldl/Deepfake_Detection",  
-        filename="Deepfake_Detection.h5"
+        repo_id=REPO_ID,
+        filename=model_file
     )
 
     return tf.keras.models.load_model(model_path)
@@ -51,7 +63,6 @@ if uploaded_file is not None:
 
     if st.button("Detect"):
 
-        # Preprocess image
         img = image.resize((IMG_SIZE, IMG_SIZE))
 
         img_array = np.array(img)
@@ -62,7 +73,6 @@ if uploaded_file is not None:
 
         img_array = np.expand_dims(img_array, axis=0)
 
-        # Predict
         pred = float(model.predict(img_array, verbose=0)[0][0])
 
         st.divider()
