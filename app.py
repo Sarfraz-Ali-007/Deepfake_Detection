@@ -13,7 +13,7 @@ def load_model():
 
     model_path = hf_hub_download(
         repo_id="freemldl/Deepfake_Detection",  
-        filename="Deepfake_Detection"
+        filename="Deepfake_Detection.h5"
     )
 
     return tf.keras.models.load_model(model_path)
