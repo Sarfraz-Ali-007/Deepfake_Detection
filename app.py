@@ -17,18 +17,14 @@ st.set_page_config(
 # ---------------- CONFIG ----------------
 IMG_SIZE = 224
 
-# Hugging Face Repository
-REPO_ID = "spaces/freemldl/Deepfake_Detection"
-MODEL_FILE = "model.weights.h5"
-
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
 
-    # Download model from Hugging Face
     model_path = hf_hub_download(
-        repo_id=REPO_ID,
-        filename=MODEL_FILE
+        repo_id="freemldl/Deepfake_Detection",
+        filename="model.weights.h5",
+        token=st.secrets["HF_TOKEN"]
     )
 
     base_model = MobileNetV2(
