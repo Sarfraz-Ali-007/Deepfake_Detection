@@ -7,7 +7,7 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Flatten, Dense, Dropout
 
-# ---------------- MUST BE FIRST STREAMLIT COMMAND ----------------
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Deepfake Detection",
     page_icon="🔍",
@@ -17,17 +17,19 @@ st.set_page_config(
 # ---------------- CONFIG ----------------
 IMG_SIZE = 224
 
-# ---------------- LOAD MODEL ----------------
-
+# Your HF model repository
 REPO_ID = "freemldl/Deepfake_Detection"
+MODEL_FILE = "model.weights.h5"
 
+# ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
 
+    # Download model from HF Hub
     model_path = hf_hub_download(
-        repo_id="freemldl/Deepfake_Detection",
-        filename="model.weights.h5",
-        token=st.secrets["HF_TOKEN"]
+        repo_id=REPO_ID,
+        filename=MODEL_FILE,
+        repo_type="space"
     )
 
     base_model = MobileNetV2(
@@ -53,18 +55,6 @@ def load_model():
 # Load model
 model = load_model()
 
-import traceback
-import streamlit as st
-
-try:
-    model_path = hf_hub_download(
-        repo_id=REPO_ID,
-        filename="model.weights.h5"
-    )
-except Exception as e:
-    st.error(str(e))
-    st.code(traceback.format_exc())
-
 # ---------------- IMAGE PREPROCESS ----------------
 def preprocess_image(image):
 
@@ -88,7 +78,9 @@ def predict_image(image):
 # ---------------- UI ----------------
 st.title("🔍 Deepfake Detection")
 
-st.write("Upload an image and the model will predict whether it is REAL or FAKE.")
+st.write(
+    "Upload an image and the model will predict whether it is REAL or FAKE."
+)
 
 uploaded_file = st.file_uploader(
     "Choose an image",
@@ -111,9 +103,8 @@ if uploaded_file is not None:
 
             score = predict_image(image)
 
-            # Your model:
-            # score >= 0.5 => REAL
-            # score < 0.5 => FAKE
+            # score >= 0.5 = REAL
+            # score < 0.5 = FAKE
 
             if score >= 0.5:
                 st.success(
