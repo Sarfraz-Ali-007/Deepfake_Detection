@@ -18,6 +18,9 @@ st.set_page_config(
 IMG_SIZE = 224
 
 # ---------------- LOAD MODEL ----------------
+
+REPO_ID = "freemldl/Deepfake_Detection"
+
 @st.cache_resource
 def load_model():
 
@@ -49,6 +52,18 @@ def load_model():
 
 # Load model
 model = load_model()
+
+import traceback
+import streamlit as st
+
+try:
+    model_path = hf_hub_download(
+        repo_id=REPO_ID,
+        filename="model.weights.h5"
+    )
+except Exception as e:
+    st.error(str(e))
+    st.code(traceback.format_exc())
 
 # ---------------- IMAGE PREPROCESS ----------------
 def preprocess_image(image):
