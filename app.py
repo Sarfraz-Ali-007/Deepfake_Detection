@@ -18,7 +18,7 @@ st.set_page_config(
 IMG_SIZE = 224
 
 # Hugging Face Repository
-REPO_ID = "freemldl/Deepfake_Detection"
+REPO_ID = "https://huggingface.co/spaces/freemldl/Deepfake_Detection"
 MODEL_FILE = "model.weights.h5"
 
 # ---------------- LOAD MODEL ----------------
