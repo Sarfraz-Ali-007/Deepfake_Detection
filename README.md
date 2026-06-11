@@ -1,51 +1,43 @@
-# Deepfake_Detection
-
 # Deepfake Detection System
 
-A Deep Learning-based Deepfake Detection System that identifies whether an image is **Real** or **Fake** using TensorFlow and MobileNetV2. The project leverages transfer learning to achieve efficient and accurate image classification and provides an easy-to-use interface for testing images.
+A Deep Learning-based Deepfake Detection System built using TensorFlow and MobileNetV2. This project classifies facial images as **Real** or **Fake** using transfer learning and computer vision techniques.
 
 ---
 
-## Project Overview
+## Overview
 
-Deepfakes are AI-generated images or videos that can manipulate visual content and spread misinformation. This project aims to detect deepfake images using a Convolutional Neural Network (CNN) based on MobileNetV2.
+Deepfakes are synthetic media generated using AI techniques that can manipulate visual content and create realistic but fake images or videos. Detecting such content is becoming increasingly important for digital security, media verification, and misinformation prevention.
 
-The model is trained on labeled real and fake face images and can classify uploaded images in real time.
+This project uses a pretrained MobileNetV2 model to learn visual patterns that distinguish authentic images from AI-generated or manipulated images.
 
 ---
 
-## Features
+## Key Features
 
-- Detects Real and Fake Images
+- Binary classification: Real vs Fake
 - Transfer Learning with MobileNetV2
-- Binary Image Classification
-- Data Augmentation
-- Model Evaluation on Validation and Test Data
-- Real-Time Prediction
-- Easy Deployment with Streamlit
+- Image preprocessing and augmentation
+- Model evaluation on unseen test data
+- Streamlit-based prediction interface
+- End-to-end Deep Learning pipeline
 
 ---
 
 ## Tech Stack
 
-- Python
-- TensorFlow
-- Keras
-- MobileNetV2
-- NumPy
-- Matplotlib
-- Streamlit
+| Category | Technology |
+|-----------|------------|
+| Programming Language | Python |
+| Deep Learning | TensorFlow, Keras |
+| Computer Vision | OpenCV |
+| Model Architecture | MobileNetV2 |
+| Data Processing | NumPy, Pandas |
+| Visualization | Matplotlib |
+| Deployment | Streamlit |
 
 ---
 
-## Dataset
-
-The dataset contains two classes:
-
-- Real Images
-- Fake Images
-
-Dataset Structure:
+## Dataset Structure
 
 ```text
 dataset/
@@ -63,19 +55,47 @@ dataset/
     └── fake/
 ```
 
+The dataset is divided into:
+
+- Training Set
+- Validation Set
+- Test Set
+
+This split helps evaluate model performance on unseen data and reduce overfitting.
+
 ---
 
-## Model Architecture
+## Data Preprocessing
 
-The project uses Transfer Learning with MobileNetV2.
+Before training, all images were normalized:
 
-Steps:
+```python
+rescale = 1./255
+```
 
-1. Load pretrained MobileNetV2 weights
-2. Freeze base layers
-3. Add custom classification layers
-4. Train on Deepfake dataset
-5. Evaluate performance on validation and test sets
+Pixel values were scaled from:
+
+```text
+0–255 → 0–1
+```
+
+---
+
+## Data Augmentation
+
+To improve generalization and reduce overfitting, the following augmentation techniques were applied:
+
+```python
+rotation_range=20
+zoom_range=0.2
+horizontal_flip=True
+```
+
+Benefits:
+
+- Increases dataset diversity
+- Improves robustness
+- Reduces overfitting
 
 ---
 
@@ -83,11 +103,35 @@ Steps:
 
 | Parameter | Value |
 |------------|---------|
-| Image Size | 160 × 160 |
-| Batch Size | 16 |
-| Optimizer | Adam |
-| Loss Function | Binary Crossentropy |
-| Epochs | 5 |
+| Image Size | 224 × 224 |
+| Batch Size | 32 |
+| Classification Type | Binary |
+| Image Normalization | 1/255 |
+| Rotation Range | 20° |
+| Zoom Range | 0.2 |
+| Horizontal Flip | Enabled |
+
+---
+
+## Model Architecture
+
+This project uses **MobileNetV2** as the feature extractor through transfer learning.
+
+### Workflow
+
+1. Load pretrained MobileNetV2 weights
+2. Remove the original classification layer
+3. Add custom dense layers
+4. Train on deepfake dataset
+5. Evaluate on validation and test sets
+6. Deploy for real-time prediction
+
+### Why MobileNetV2?
+
+- Lightweight architecture
+- Fast inference
+- Efficient transfer learning
+- Strong image classification performance
 
 ---
 
@@ -96,67 +140,53 @@ Steps:
 ```text
 Deepfake_Detection/
 │
-├── app.py
 ├── train.py
 ├── predict.py
+├── app.py
 ├── requirements.txt
 ├── README.md
 │
 ├── model/
 │   └── deepfake_model.h5
 │
-├── notebooks/
-│   └── training.ipynb
-│
 ├── screenshots/
 │   ├── home.png
-│   ├── real_prediction.png
-│   └── fake_prediction.png
+│   ├── prediction_real.png
+│   └── prediction_fake.png
 │
 └── dataset/
 ```
 
 ---
 
-## Installation
+## Running the Project
 
-Clone the repository:
+### Clone Repository
 
 ```bash
 git clone https://github.com/Sarfraz-Ali-007/Deepfake_Detection.git
-```
-
-Move into the project folder:
-
-```bash
 cd Deepfake_Detection
 ```
 
-Install dependencies:
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## Run Training
+### Train Model
 
 ```bash
 python train.py
 ```
 
----
-
-## Run Prediction
+### Run Predictions
 
 ```bash
 python predict.py
 ```
 
----
-
-## Run Streamlit App
+### Launch Streamlit Application
 
 ```bash
 streamlit run app.py
@@ -166,9 +196,9 @@ streamlit run app.py
 
 ## Screenshots
 
-### Home Page
+### Application Home Page
 
-Add screenshot here:
+Add:
 
 ```text
 screenshots/home.png
@@ -176,39 +206,44 @@ screenshots/home.png
 
 ### Real Image Prediction
 
-Add screenshot here:
+Add:
 
 ```text
-screenshots/real_prediction.png
+screenshots/prediction_real.png
 ```
 
 ### Fake Image Prediction
 
-Add screenshot here:
+Add:
 
 ```text
-screenshots/fake_prediction.png
+screenshots/prediction_fake.png
 ```
 
 ---
 
-## Future Improvements
+## Future Enhancements
 
 - Video Deepfake Detection
-- Explainable AI Visualizations
-- Higher Accuracy Models
 - Real-Time Webcam Detection
+- Explainable AI Visualizations
+- Model Quantization and Optimization
+- Multi-Class Deepfake Classification
 
 ---
 
 ## Skills Demonstrated
 
+This project demonstrates practical experience in:
+
 - Deep Learning
 - Computer Vision
-- TensorFlow
-- CNN
 - Transfer Learning
-- Data Preprocessing
+- TensorFlow
+- Keras
+- MobileNetV2
+- Data Augmentation
+- Image Classification
 - Model Evaluation
 - Streamlit Deployment
 - Python Development
@@ -217,12 +252,12 @@ screenshots/fake_prediction.png
 
 ## Author
 
-**Sarfraz Ali**
+### Sarfraz Ali
 
 GitHub:
 https://github.com/Sarfraz-Ali-007
 
 LinkedIn:
-(Add your LinkedIn profile link)
+(Add your LinkedIn Profile URL)
 
 ---
