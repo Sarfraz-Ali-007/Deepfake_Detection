@@ -146,9 +146,6 @@ Deepfake_Detection/
 ├── requirements.txt
 ├── README.md
 │
-├── model/
-│   └── deepfake_model.h5
-│
 ├── screenshots/
 │   ├── home.png
 │   ├── prediction_real.png
@@ -258,6 +255,6 @@ GitHub:
 https://github.com/Sarfraz-Ali-007
 
 LinkedIn:
-(Add your LinkedIn Profile URL)
+https://www.linkedin.com/in/sarfraz-ali-ai/
 
 ---
