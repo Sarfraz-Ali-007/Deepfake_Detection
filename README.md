@@ -150,8 +150,6 @@ Deepfake_Detection/
 │   ├── home.png
 │   ├── prediction_real.png
 │   └── prediction_fake.png
-│
-└── dataset/
 ```
 
 ---
